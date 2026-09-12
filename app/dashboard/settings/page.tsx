@@ -79,38 +79,38 @@ export default function SettingsPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Settings className="w-6 h-6" />
-          <h2 className="text-2xl font-bold">Настройки</h2>
+          <h2 className="font-display text-3xl font-light text-ink">Настройки</h2>
         </div>
-        <button onClick={fetchSettings} className="p-2 hover:bg-white/5 rounded-lg transition">
-          <RefreshCw className="w-4 h-4 text-[var(--muted)]" />
+        <button onClick={fetchSettings} aria-label="Обновить" className="grid min-h-11 w-11 place-items-center hover:bg-ink/[0.05] rounded-pill transition">
+          <RefreshCw className="w-4 h-4 text-ink-dust" />
         </button>
       </div>
 
-      <div className={`border rounded-xl p-5 ${limitsEnabled ? 'bg-[var(--card)] border-[var(--border)]' : 'bg-green-500/5 border-green-800'}`}>
-        <div className="flex items-center justify-between">
+      <div className={`border rounded-lg p-5 ${limitsEnabled ? 'card-elevated' : 'bg-success/5 border-success/40'}`}>
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             {limitsEnabled ? (
-              <ToggleRight className="w-8 h-8 text-[var(--muted)] cursor-pointer" onClick={() => handleToggle('limits_enabled', 'true')} />
+              <ToggleRight className="w-8 h-8 text-ink-dust cursor-pointer" onClick={() => handleToggle('limits_enabled', 'true')} />
             ) : (
-              <ToggleLeft className="w-8 h-8 text-green-400 cursor-pointer" onClick={() => handleToggle('limits_enabled', 'false')} />
+              <ToggleLeft className="w-8 h-8 text-success cursor-pointer" onClick={() => handleToggle('limits_enabled', 'false')} />
             )}
             <div>
-              <h3 className="font-semibold">Все ограничения</h3>
+              <h3 className="font-medium">Все ограничения</h3>
               <p className="text-sm text-[var(--muted)]">
                 {limitsEnabled ? 'Ограничения активны — лимиты действуют' : 'Все ограничения ОТКЛЮЧЕНЫ — свободный доступ'}
               </p>
             </div>
           </div>
-          <span className={`text-sm font-mono px-3 py-1 rounded-full ${limitsEnabled ? 'bg-[var(--border)] text-[var(--muted)]' : 'bg-green-500/20 text-green-400'}`}>
+          <span className={`text-sm font-mono px-3 py-1 rounded-pill ${limitsEnabled ? 'bg-ink/[0.05] text-ink-mist' : 'bg-success/20 text-success'}`}>
             {limitsEnabled ? 'ВКЛ' : 'ВЫКЛ'}
           </span>
         </div>
         <button
           onClick={() => handleToggle('limits_enabled', limitsEnabled ? 'true' : 'false')}
-          className={`mt-3 w-full py-2 rounded-lg text-sm font-medium transition ${
+          className={`mt-3 min-h-11 w-full py-2 rounded-pill text-sm font-medium transition ${
             limitsEnabled
-              ? 'bg-red-500/10 text-red-400 border border-red-800 hover:bg-red-500/20'
-              : 'bg-green-500/10 text-green-400 border border-green-800 hover:bg-green-500/20'
+              ? 'bg-danger/10 text-danger border border-danger/40 hover:bg-danger/20'
+              : 'bg-success/10 text-success border border-success/40 hover:bg-success/20'
           }`}
         >
           {limitsEnabled ? 'Отключить все ограничения' : 'Включить все ограничения'}
@@ -144,12 +144,12 @@ export default function SettingsPage() {
                       min="0"
                       value={currentValue}
                       onChange={e => setLocalValues(prev => ({ ...prev, [setting.key]: e.target.value }))}
-                      className="w-32 bg-black/30 border border-[var(--border)] rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-white/30"
+                      className="w-32 bg-surface border border-border rounded-pill px-4 py-2 text-sm font-mono focus:outline-none focus:border-ink/40"
                     />
                     <button
                       onClick={() => handleSave(setting.key, currentValue)}
                       disabled={saving === setting.key}
-                      className="flex items-center gap-2 px-4 py-2 text-sm bg-white/10 rounded-lg hover:bg-white/15 transition disabled:opacity-50"
+                      className="flex items-center gap-2 min-h-11 px-5 py-2 text-sm bg-ink text-white rounded-pill uppercase tracking-[0.08em] hover:bg-[#3a3435] transition disabled:opacity-50"
                     >
                       <Save className="w-3.5 h-3.5" />
                       {saving === setting.key ? 'Сохранение...' : 'Сохранить'}

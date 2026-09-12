@@ -62,10 +62,10 @@ export default function LogPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <ScrollText className="w-6 h-6" />
-          <h2 className="text-2xl font-bold">Журнал действий</h2>
+          <h2 className="font-display text-3xl font-light text-ink">Журнал действий</h2>
         </div>
-        <button onClick={fetchLog} className="p-2 hover:bg-white/5 rounded-lg transition">
-          <RefreshCw className="w-4 h-4 text-[var(--muted)]" />
+        <button onClick={fetchLog} aria-label="Обновить" className="grid min-h-11 w-11 place-items-center hover:bg-ink/[0.05] rounded-pill transition">
+          <RefreshCw className="w-4 h-4 text-ink-dust" />
         </button>
       </div>
 
@@ -73,7 +73,7 @@ export default function LogPage() {
         <select
           value={action}
           onChange={e => { setAction(e.target.value); setPage(1); }}
-          className="bg-[var(--card)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm focus:outline-none"
+          className="bg-surface border border-border rounded-pill px-4 min-h-11 py-2 text-sm focus:outline-none"
         >
           <option value="">Все действия</option>
           <option value="ban_ip">Блокировка IP</option>
@@ -102,9 +102,9 @@ export default function LogPage() {
               <tr><td colSpan={4} className="px-4 py-8 text-center text-[var(--muted)]">Записей нет</td></tr>
             ) : (
               data.logs.map(entry => (
-                <tr key={entry.id} className="border-b border-[var(--border)] hover:bg-white/[0.02]">
+                <tr key={entry.id} className="border-b border-[var(--border)] hover:bg-ink/[0.02]">
                   <td className="px-4 py-3">
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-white/5">
+                    <span className="text-xs px-3 py-1 rounded-pill bg-ink/[0.05] text-ink">
                       {ACTION_LABELS[entry.action] || entry.action}
                     </span>
                   </td>
@@ -124,8 +124,8 @@ export default function LogPage() {
             {data.total} записей — Страница {data.page} из {data.totalPages}
           </span>
           <div className="flex gap-2">
-            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1.5 text-xs bg-[var(--card)] border border-[var(--border)] rounded-lg hover:bg-white/5 disabled:opacity-30">Назад</button>
-            <button onClick={() => setPage(p => Math.min(data.totalPages, p + 1))} disabled={page === data.totalPages} className="px-3 py-1.5 text-xs bg-[var(--card)] border border-[var(--border)] rounded-lg hover:bg-white/5 disabled:opacity-30">Вперёд</button>
+            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="min-h-9 px-4 py-1.5 text-xs bg-surface border border-border rounded-pill hover:bg-ink/[0.05] disabled:opacity-30">Назад</button>
+            <button onClick={() => setPage(p => Math.min(data.totalPages, p + 1))} disabled={page === data.totalPages} className="min-h-9 px-4 py-1.5 text-xs bg-surface border border-border rounded-pill hover:bg-ink/[0.05] disabled:opacity-30">Вперёд</button>
           </div>
         </div>
       )}
