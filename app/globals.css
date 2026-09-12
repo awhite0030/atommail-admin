@@ -38,6 +38,7 @@
   --color-accent: var(--accent);
   --color-danger: var(--danger);
   --color-success: var(--success);
+  --radius-pill: 999px;
   --color-ink: var(--ink);
   --color-ink-mist: var(--ink-mist);
   --color-ink-dust: var(--ink-dust);
