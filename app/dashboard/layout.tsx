@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { PageIn } from '@/lib/motion';
 import { LayoutDashboard, Inbox, Mail, Shield, Ban, ScrollText, Settings, LogOut, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -28,14 +30,21 @@ function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
             href={item.href}
             onClick={onNavigate}
             className={cn(
-              'flex items-center gap-3 min-h-11 px-3 py-2 rounded-pill text-sm transition',
+              'relative flex items-center gap-3 min-h-11 px-3 py-2 rounded-pill text-sm transition-colors',
               isActive
-                ? 'bg-ink text-white font-medium'
+                ? 'text-white font-medium'
                 : 'text-ink-mist hover:text-ink hover:bg-ink/[0.05]'
             )}
           >
-            <Icon className="w-4 h-4" />
-            {item.label}
+            {isActive && (
+              <motion.span
+                layoutId="nav-active"
+                className="absolute inset-0 rounded-pill bg-ink"
+                transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+              />
+            )}
+            <Icon className="relative w-4 h-4" />
+            <span className="relative">{item.label}</span>
           </Link>
         );
       })}
@@ -79,10 +88,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </header>
 
       {menuOpen && (
-        <div className="lg:hidden border-b border-border bg-card px-2 py-2">
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="lg:hidden overflow-hidden border-b border-border bg-card px-2 py-2"
+        >
           <NavLinks pathname={pathname} onNavigate={() => setMenuOpen(false)} />
           <LogoutButton className="p-2 pt-0" />
-        </div>
+        </motion.div>
       )}
 
       {/* Боковая панель (десктоп) */}
@@ -101,9 +116,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Основной контент */}
       <main className="flex-1 overflow-auto">
-        <div className="p-4 sm:p-6 max-w-7xl">
+        <PageIn className="p-4 sm:p-6 max-w-7xl">
           {children}
-        </div>
+        </PageIn>
       </main>
     </div>
   );

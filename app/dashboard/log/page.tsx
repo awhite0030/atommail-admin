@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ScrollText, RefreshCw } from 'lucide-react';
 import { formatTimestamp } from '@/lib/utils';
+import { SkeletonRows } from '@/lib/motion';
 
 interface AuditEntry {
   id: number;
@@ -97,7 +98,7 @@ export default function LogPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={4} className="px-4 py-8 text-center text-[var(--muted)]">Загрузка...</td></tr>
+              <tr><td colSpan={4} className="p-0"><SkeletonRows count={5} className="space-y-2 p-4" /></td></tr>
             ) : !data?.logs.length ? (
               <tr><td colSpan={4} className="px-4 py-8 text-center text-[var(--muted)]">Записей нет</td></tr>
             ) : (

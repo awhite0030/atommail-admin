@@ -6,6 +6,7 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
+import { StaggerGroup, StaggerItem, CountUp, HoverLift, SkeletonRows } from '@/lib/motion';
 
 interface Stats {
   totalInboxes: number;
@@ -46,22 +47,38 @@ export default function DashboardPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="text-ink-mist text-sm">Загрузка статистики...</div>;
+  if (loading) return <SkeletonRows count={6} />;
   if (!stats) return <div className="text-danger text-sm">Не удалось загрузить статистику</div>;
 
   return (
     <div className="space-y-6">
       <h2 className="font-display text-3xl font-light text-ink">Дашборд</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <MetricCard icon={Inbox} label="Всего инбоксов" value={stats.totalInboxes} sub={`${stats.inboxesToday} сегодня, ${stats.inboxesWeek} за неделю`} />
-        <MetricCard icon={Mail} label="Всего писем" value={stats.totalEmails} sub={`${stats.emailsToday} сегодня, ${stats.emailsWeek} за неделю`} />
-        <MetricCard icon={Clock} label="Активных сейчас" value={stats.activeInboxes} sub="не истёкших" />
-        <MetricCard icon={Activity} label="Сегодня" value={stats.inboxesToday} sub={`${stats.emailsToday} писем`} />
-      </div>
+      <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4" gap={0.09}>
+        <StaggerItem>
+          <HoverLift className="card-elevated p-4 sm:p-5">
+            <MetricCard icon={Inbox} label="Всего инбоксов" value={stats.totalInboxes} sub={`${stats.inboxesToday} сегодня, ${stats.inboxesWeek} за неделю`} />
+          </HoverLift>
+        </StaggerItem>
+        <StaggerItem>
+          <HoverLift className="card-elevated p-4 sm:p-5">
+            <MetricCard icon={Mail} label="Всего писем" value={stats.totalEmails} sub={`${stats.emailsToday} сегодня, ${stats.emailsWeek} за неделю`} />
+          </HoverLift>
+        </StaggerItem>
+        <StaggerItem>
+          <HoverLift className="card-elevated p-4 sm:p-5">
+            <MetricCard icon={Clock} label="Активных сейчас" value={stats.activeInboxes} sub="не истёкших" />
+          </HoverLift>
+        </StaggerItem>
+        <StaggerItem>
+          <HoverLift className="card-elevated p-4 sm:p-5">
+            <MetricCard icon={Activity} label="Сегодня" value={stats.inboxesToday} sub={`${stats.emailsToday} писем`} />
+          </HoverLift>
+        </StaggerItem>
+      </StaggerGroup>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <div className="card-elevated p-4">
+      <StaggerGroup className="grid grid-cols-1 xl:grid-cols-2 gap-4" delay={0.3} gap={0.1}>
+        <StaggerItem className="card-elevated p-4">
           <h3 className="font-mono text-micro uppercase text-ink-dust mb-4">Инбоксы — Последние 7 дней</h3>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={stats.inboxesPerDay}>
@@ -69,12 +86,12 @@ export default function DashboardPage() {
               <XAxis dataKey="date" tick={{ fontSize: 11, fill: INK_MIST }} stroke={GRID} tickFormatter={(v: string) => v.slice(5)} />
               <YAxis tick={{ fontSize: 11, fill: INK_MIST }} stroke={GRID} />
               <Tooltip contentStyle={TOOLTIP_STYLE} />
-              <Area type="monotone" dataKey="count" stroke={COLORS[0]} fill={COLORS[0]} fillOpacity={0.15} />
+              <Area type="monotone" dataKey="count" stroke={COLORS[0]} fill={COLORS[0]} fillOpacity={0.15} animationDuration={900} animationEasing="ease-out" />
             </AreaChart>
           </ResponsiveContainer>
-        </div>
+        </StaggerItem>
 
-        <div className="card-elevated p-4">
+        <StaggerItem className="card-elevated p-4">
           <h3 className="font-mono text-micro uppercase text-ink-dust mb-4">Письма — Последние 7 дней</h3>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={stats.emailsPerDay}>
@@ -82,14 +99,14 @@ export default function DashboardPage() {
               <XAxis dataKey="date" tick={{ fontSize: 11, fill: INK_MIST }} stroke={GRID} tickFormatter={(v: string) => v.slice(5)} />
               <YAxis tick={{ fontSize: 11, fill: INK_MIST }} stroke={GRID} />
               <Tooltip contentStyle={TOOLTIP_STYLE} />
-              <Area type="monotone" dataKey="count" stroke={COLORS[2]} fill={COLORS[2]} fillOpacity={0.15} />
+              <Area type="monotone" dataKey="count" stroke={COLORS[2]} fill={COLORS[2]} fillOpacity={0.15} animationDuration={900} animationEasing="ease-out" />
             </AreaChart>
           </ResponsiveContainer>
-        </div>
-      </div>
+        </StaggerItem>
+      </StaggerGroup>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <div className="card-elevated xl:col-span-2 p-4">
+      <StaggerGroup className="grid grid-cols-1 xl:grid-cols-3 gap-4" delay={0.45} gap={0.1}>
+        <StaggerItem className="card-elevated xl:col-span-2 p-4">
           <h3 className="font-mono text-micro uppercase text-ink-dust mb-4">Инбоксы сегодня — по часам</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={stats.inboxesByHour}>
@@ -97,12 +114,12 @@ export default function DashboardPage() {
               <XAxis dataKey="hour" tick={{ fontSize: 10, fill: INK_MIST }} stroke={GRID} />
               <YAxis tick={{ fontSize: 11, fill: INK_MIST }} stroke={GRID} />
               <Tooltip contentStyle={TOOLTIP_STYLE} />
-              <Bar dataKey="count" fill={COLORS[3]} radius={[3, 3, 0, 0]} />
+              <Bar dataKey="count" fill={COLORS[3]} radius={[3, 3, 0, 0]} animationDuration={900} animationEasing="ease-out" />
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </StaggerItem>
 
-        <div className="card-elevated p-4">
+        <StaggerItem className="card-elevated p-4">
           <h3 className="font-mono text-micro uppercase text-ink-dust mb-4">Топ доменов отправителей</h3>
           {stats.topDomains.length === 0 ? (
             <p className="text-xs text-ink-mist">Пока нет данных о письмах</p>
@@ -110,7 +127,7 @@ export default function DashboardPage() {
             <div className="space-y-2">
               <ResponsiveContainer width="100%" height={140}>
                 <PieChart>
-                  <Pie data={stats.topDomains} dataKey="count" nameKey="domain" cx="50%" cy="50%" outerRadius={55} innerRadius={30}>
+                  <Pie data={stats.topDomains} dataKey="count" nameKey="domain" cx="50%" cy="50%" outerRadius={55} innerRadius={30} animationDuration={900} animationEasing="ease-out">
                     {stats.topDomains.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
                   <Tooltip contentStyle={TOOLTIP_STYLE} />
@@ -129,8 +146,8 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
+        </StaggerItem>
+      </StaggerGroup>
 
       {stats.topIps.length > 0 && (
         <div className="card-elevated p-4">
@@ -159,13 +176,15 @@ export default function DashboardPage() {
 
 function MetricCard({ icon: Icon, label, value, sub }: { icon: any; label: string; value: number; sub: string }) {
   return (
-    <div className="card-elevated p-4 sm:p-5">
+    <>
       <div className="flex items-center gap-2 text-ink-dust mb-2">
         <Icon className="w-4 h-4" />
         <span className="font-mono text-micro uppercase">{label}</span>
       </div>
-      <div className="font-display text-3xl font-light text-ink">{value.toLocaleString('ru-RU')}</div>
+      <div className="font-display text-3xl font-light text-ink">
+        <CountUp value={value} />
+      </div>
       <div className="text-xs text-ink-mist mt-1">{sub}</div>
-    </div>
+    </>
   );
 }
