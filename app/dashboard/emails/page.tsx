@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search, RefreshCw, Trash2, Eye, X } from 'lucide-react';
 import { timeAgo, truncateMiddle, formatTimestamp } from '@/lib/utils';
+import { SkeletonRows } from '@/lib/motion';
 
 interface EmailRecord {
   id: number;
@@ -98,7 +99,7 @@ export default function EmailsPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-[var(--muted)]">Загрузка...</td></tr>
+              <tr><td colSpan={6} className="p-0"><SkeletonRows count={6} className="space-y-2 p-4" /></td></tr>
             ) : !data?.emails.length ? (
               <tr><td colSpan={6} className="px-4 py-8 text-center text-[var(--muted)]">Письма не найдены</td></tr>
             ) : (

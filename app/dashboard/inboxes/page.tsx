@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search, Trash2, RefreshCw } from 'lucide-react';
 import { formatTimestamp, timeAgo, truncateMiddle } from '@/lib/utils';
+import { SkeletonRows } from '@/lib/motion';
 
 interface InboxRecord {
   address: string;
@@ -119,7 +120,7 @@ export default function InboxesPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-[var(--muted)]">Загрузка...</td></tr>
+              <tr><td colSpan={6} className="p-0"><SkeletonRows count={6} className="space-y-2 p-4" /></td></tr>
             ) : !data?.inboxes.length ? (
               <tr><td colSpan={6} className="px-4 py-8 text-center text-[var(--muted)]">Инбоксы не найдены</td></tr>
             ) : (

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Ban, Unlock, Plus } from 'lucide-react';
 import { formatTimestamp, truncateMiddle } from '@/lib/utils';
+import { SkeletonRows } from '@/lib/motion';
 
 interface BannedIp {
   ip_hash: string;
@@ -111,7 +112,7 @@ export default function BansPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-[var(--muted)]">Загрузка...</td></tr>
+              <tr><td colSpan={5} className="p-0"><SkeletonRows count={4} className="space-y-2 p-4" /></td></tr>
             ) : bans.length === 0 ? (
               <tr><td colSpan={5} className="px-4 py-8 text-center text-[var(--muted)]">Нет заблокированных IP</td></tr>
             ) : (
