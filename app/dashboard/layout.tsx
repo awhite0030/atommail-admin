@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Inbox, Mail, Shield, Ban, ScrollText, Settings, LogOut } from 'lucide-react';
+import { useState } from 'react';
+import { LayoutDashboard, Inbox, Mail, Shield, Ban, ScrollText, Settings, LogOut, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -15,56 +16,92 @@ const navItems = [
   { href: '/dashboard/settings', label: 'Настройки', icon: Settings },
 ];
 
+function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+  return (
+    <nav className="flex-1 p-2 space-y-1">
+      {navItems.map(item => {
+        const Icon = item.icon;
+        const isActive = pathname === item.href;
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            className={cn(
+              'flex items-center gap-3 min-h-11 px-3 py-2 rounded-pill text-sm transition',
+              isActive
+                ? 'bg-ink text-white font-medium'
+                : 'text-ink-mist hover:text-ink hover:bg-ink/[0.05]'
+            )}
+          >
+            <Icon className="w-4 h-4" />
+            {item.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+function LogoutButton({ className }: { className?: string }) {
+  return (
+    <form action="/api/auth/logout" method="POST" className={className}>
+      <button
+        type="submit"
+        className="flex items-center gap-3 min-h-11 w-full px-3 py-2 rounded-pill text-sm text-ink-mist hover:text-danger hover:bg-danger/10 transition"
+      >
+        <LogOut className="w-4 h-4" />
+        Выйти
+      </button>
+    </form>
+  );
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex">
-      {/* Боковая панель */}
-      <aside className="w-56 bg-[var(--card)] border-r border-[var(--border)] flex flex-col">
-        <div className="p-4 border-b border-[var(--border)]">
-          <h1 className="text-lg font-bold tracking-tight">AtomMail</h1>
-          <p className="text-xs text-[var(--muted)]">Панель администратора</p>
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Мобильная шапка */}
+      <header className="lg:hidden sticky top-0 z-40 flex h-14 items-center justify-between border-b border-border bg-card px-4">
+        <Link href="/dashboard" className="font-display text-lg text-ink">
+          atommail <span className="font-mono text-micro uppercase text-ink-dust">admin</span>
+        </Link>
+        <button
+          onClick={() => setMenuOpen(v => !v)}
+          aria-label="Меню"
+          aria-expanded={menuOpen}
+          className="grid min-h-11 w-11 place-items-center rounded-pill text-ink-mist hover:bg-ink/[0.05]"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+      </header>
+
+      {menuOpen && (
+        <div className="lg:hidden border-b border-border bg-card px-2 py-2">
+          <NavLinks pathname={pathname} onNavigate={() => setMenuOpen(false)} />
+          <LogoutButton className="p-2 pt-0" />
+        </div>
+      )}
+
+      {/* Боковая панель (десктоп) */}
+      <aside className="hidden lg:flex w-56 bg-card border-r border-border flex-col">
+        <div className="p-4 border-b border-border">
+          <Link href="/dashboard" className="font-display text-lg text-ink">
+            atommail
+          </Link>
+          <p className="font-mono text-micro uppercase text-ink-dust">Панель администратора</p>
         </div>
 
-        <nav className="flex-1 p-2 space-y-1">
-          {navItems.map(item => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition',
-                  isActive
-                    ? 'bg-white/10 text-white font-medium'
-                    : 'text-[var(--muted)] hover:text-white hover:bg-white/5'
-                )}
-              >
-                <Icon className="w-4 h-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <NavLinks pathname={pathname} />
 
-        <div className="p-2 border-t border-[var(--border)]">
-          <form action="/api/auth/logout" method="POST">
-            <button
-              type="submit"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--muted)] hover:text-red-400 hover:bg-red-500/10 transition w-full"
-            >
-              <LogOut className="w-4 h-4" />
-              Выйти
-            </button>
-          </form>
-        </div>
+        <LogoutButton className="p-2 border-t border-border" />
       </aside>
 
       {/* Основной контент */}
       <main className="flex-1 overflow-auto">
-        <div className="p-6 max-w-7xl">
+        <div className="p-4 sm:p-6 max-w-7xl">
           {children}
         </div>
       </main>

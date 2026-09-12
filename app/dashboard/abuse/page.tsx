@@ -24,7 +24,7 @@ export default function AbusePage() {
   }, []);
 
   if (loading) return <div className="text-[var(--muted)] text-sm">Загрузка данных...</div>;
-  if (!data) return <div className="text-red-400 text-sm">Не удалось загрузить данные</div>;
+  if (!data) return <div className="text-danger text-sm">Не удалось загрузить данные</div>;
 
   const chartData = data.topIps24h.map(ip => ({ hash: ip.hash.slice(0, 8) + '...', count: ip.count }));
 
@@ -42,12 +42,12 @@ export default function AbusePage() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Shield className="w-6 h-6 text-[var(--danger)]" />
-        <h2 className="text-2xl font-bold">Злоупотребления</h2>
+        <h2 className="font-display text-3xl font-light text-ink">Злоупотребления</h2>
       </div>
 
       {data.nearLimitIps.length > 0 && (
-        <div className="bg-red-900/20 border border-red-800 rounded-xl p-4">
-          <div className="flex items-center gap-2 text-red-400 mb-3">
+        <div className="bg-danger/5 border border-danger/30 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-danger mb-3">
             <AlertTriangle className="w-4 h-4" />
             <span className="text-sm font-medium">
               {data.nearLimitIps.length} IP-хэш{data.nearLimitIps.length > 1 ? 'ей' : ''} около дневного лимита (15+ инбоксов за 24ч)
@@ -56,8 +56,8 @@ export default function AbusePage() {
           <div className="space-y-1">
             {data.nearLimitIps.map(ip => (
               <div key={ip.hash} className="flex items-center justify-between text-sm">
-                <code className="text-xs bg-white/5 px-2 py-0.5 rounded">{ip.hash}</code>
-                <span className="text-red-400 font-mono text-xs">{ip.count}/20</span>
+                <code className="text-xs bg-ink/[0.05] px-2 py-0.5 rounded text-ink">{ip.hash}</code>
+                <span className="text-danger font-mono text-xs">{ip.count}/20</span>
               </div>
             ))}
           </div>
@@ -71,11 +71,11 @@ export default function AbusePage() {
         ) : (
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={chartData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="#222" />
-              <XAxis type="number" tick={{ fontSize: 11 }} stroke="#555" />
-              <YAxis dataKey="hash" type="category" tick={{ fontSize: 10 }} stroke="#555" width={80} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(35, 31, 32, 0.08)" />
+              <XAxis type="number" tick={{ fontSize: 11, fill: '#6b6862' }} stroke="rgba(35, 31, 32, 0.08)" />
+              <YAxis dataKey="hash" type="category" tick={{ fontSize: 10, fill: '#6b6862' }} stroke="rgba(35, 31, 32, 0.08)" width={80} />
               <Tooltip contentStyle={{ background: '#111', border: '1px solid #222', borderRadius: 8 }} />
-              <Bar dataKey="count" fill="#ef4444" radius={[0, 3, 3, 0]} />
+              <Bar dataKey="count" fill="#a9554f" radius={[0, 3, 3, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -88,16 +88,16 @@ export default function AbusePage() {
             <div key={ip.hash} className="border border-[var(--border)] rounded-lg overflow-hidden">
               <button
                 onClick={() => setExpandedIp(expandedIp === ip.hash ? null : ip.hash)}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition text-left"
+                className="w-full flex items-center justify-between px-4 py-3 min-h-11 hover:bg-ink/[0.02] transition text-left"
               >
                 <div className="flex items-center gap-3">
-                  <code className="text-xs bg-white/5 px-2 py-0.5 rounded">{ip.hash}</code>
+                  <code className="text-xs bg-ink/[0.05] px-2 py-0.5 rounded text-ink">{ip.hash}</code>
                   <span className="text-xs text-[var(--muted)]">{ip.count} инбокс{ip.count !== 1 ? 'ов' : ''}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={e => { e.stopPropagation(); handleBan(ip.hash); }}
-                    className="flex items-center gap-1 px-2 py-1 text-xs bg-red-500/10 text-red-400 rounded hover:bg-red-500/20 transition"
+                    className="flex items-center gap-1 min-h-9 px-3 py-1 text-xs bg-danger/10 text-danger rounded-pill hover:bg-danger/20 transition"
                   >
                     <Ban className="w-3 h-3" /> Бан
                   </button>
@@ -140,11 +140,11 @@ export default function AbusePage() {
             <div key={ip.hash} className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-3">
                 <span className="text-xs text-[var(--muted)] font-mono w-6">{i + 1}.</span>
-                <code className="text-xs bg-white/5 px-2 py-0.5 rounded">{ip.hash}</code>
+                <code className="text-xs bg-ink/[0.05] px-2 py-0.5 rounded text-ink">{ip.hash}</code>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-24 bg-white/5 rounded-full h-2">
-                  <div className="bg-orange-500 h-2 rounded-full" style={{ width: `${Math.min(100, (ip.count / Math.max(...data.allTimeTopIps.map(x => x.count))) * 100)}%` }} />
+                <div className="w-24 bg-ink/[0.08] rounded-full h-2">
+                  <div className="bg-iris h-2 rounded-full" style={{ width: `${Math.min(100, (ip.count / Math.max(...data.allTimeTopIps.map(x => x.count))) * 100)}%` }} />
                 </div>
                 <span className="text-xs font-mono w-8 text-right">{ip.count}</span>
               </div>

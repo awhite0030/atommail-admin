@@ -1,15 +1,31 @@
 @import "tailwindcss";
 
+/*
+ * AtomMail Admin — Paper & Ink design system.
+ * Same tokens as the public site (app.atommail.cyou), adapted to
+ * Tailwind v4's @theme syntax. Warm paper background, ink text,
+ * single soft shadows, pill accents.
+ */
+
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
-  --card: #09090b;
-  --border: rgba(255, 255, 255, 0.1);
-  --border-hover: rgba(255, 255, 255, 0.2);
-  --muted: #a1a1aa;
-  --accent: #ffffff;
-  --danger: #ef4444;
-  --success: #22c55e;
+  /* Surfaces */
+  --background: #f1f1f1;
+  --foreground: #231f20;
+  --card: #ffffff;
+  --border: rgba(35, 31, 32, 0.10);
+  --border-hover: rgba(35, 31, 32, 0.22);
+  --muted: #6b6862;
+  --accent: #231f20;
+  --danger: #a9554f;
+  --success: #5a7a5e;
+
+  /* Ink ramp (matches the public site) */
+  --ink: #231f20;
+  --ink-mist: #6b6862;
+  --ink-dust: #8f8d88;
+  --ink-faint: #c0bdb8;
+  --surface: #ffffff;
+  --raised: #e6e4e1;
 }
 
 @theme inline {
@@ -22,8 +38,15 @@
   --color-accent: var(--accent);
   --color-danger: var(--danger);
   --color-success: var(--success);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-ink-mist: var(--ink-mist);
+  --color-ink-dust: var(--ink-dust);
+  --color-ink-faint: var(--ink-faint);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-plex-mono);
+  --font-display: var(--font-fraunces);
 }
 
 body {
@@ -31,6 +54,45 @@ body {
   color: var(--foreground);
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::selection {
+  background: rgba(35, 31, 32, 0.88);
+  color: #ffffff;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--background); }
+::-webkit-scrollbar-thumb { background: var(--ink-faint); border-radius: 999px; border: 2px solid var(--background); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-dust); }
+
+/* Elevated card: white surface with one soft drop shadow */
+.card-elevated {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 12px 40px -24px rgba(35, 31, 32, 0.22);
+}
+
+/* Long hashes/addresses never blow out the layout */
+code, .break-all {
+  overflow-wrap: anywhere;
+}
+
+/* Touch devices: no sticky hover states */
+@media (hover: none) {
+  .btn-flat:hover {
+    background-color: revert-layer;
+  }
+}
+
+/* Horizontal scroll safety */
+html {
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

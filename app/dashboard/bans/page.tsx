@@ -54,12 +54,12 @@ export default function BansPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Ban className="w-6 h-6 text-red-400" />
-          <h2 className="text-2xl font-bold">Блокировки</h2>
+          <Ban className="w-6 h-6 text-danger" />
+          <h2 className="font-display text-3xl font-light text-ink">Блокировки</h2>
         </div>
         <button
           onClick={() => setShowAdd(!showAdd)}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-white/10 rounded-lg hover:bg-white/15 transition"
+          className="flex items-center gap-2 min-h-11 px-5 py-2 text-sm bg-ink text-white rounded-pill uppercase tracking-[0.08em] hover:bg-[#3a3435] transition"
         >
           <Plus className="w-4 h-4" />
           Добавить бан
@@ -74,24 +74,24 @@ export default function BansPage() {
             placeholder="IP-хэш (32 символа)"
             value={newHash}
             onChange={e => setNewHash(e.target.value)}
-            className="w-full bg-black/30 border border-[var(--border)] rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-white/30"
+            className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-ink/40"
           />
           <input
             type="text"
             placeholder="Причина (необязательно)"
             value={newReason}
             onChange={e => setNewReason(e.target.value)}
-            className="w-full bg-black/30 border border-[var(--border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/30"
+            className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-ink/40"
           />
           <div className="flex gap-2">
             <button
               onClick={handleBan}
               disabled={adding || !newHash.trim()}
-              className="px-4 py-2 text-sm bg-red-500/10 text-red-400 border border-red-800 rounded-lg hover:bg-red-500/20 transition disabled:opacity-50"
+              className="min-h-11 px-5 py-2 text-sm bg-danger/10 text-danger border border-danger/40 rounded-pill hover:bg-danger/20 transition disabled:opacity-50"
             >
               {adding ? 'Блокировка...' : 'Заблокировать'}
             </button>
-            <button onClick={() => setShowAdd(false)} className="px-4 py-2 text-sm bg-white/5 rounded-lg hover:bg-white/10 transition">
+            <button onClick={() => setShowAdd(false)} className="min-h-11 px-5 py-2 text-sm bg-ink/[0.05] rounded-pill hover:bg-ink/[0.10] transition">
               Отмена
             </button>
           </div>
@@ -116,7 +116,7 @@ export default function BansPage() {
               <tr><td colSpan={5} className="px-4 py-8 text-center text-[var(--muted)]">Нет заблокированных IP</td></tr>
             ) : (
               bans.map(ban => (
-                <tr key={ban.ip_hash} className="border-b border-[var(--border)] hover:bg-white/[0.02]">
+                <tr key={ban.ip_hash} className="border-b border-[var(--border)] hover:bg-ink/[0.02]">
                   <td className="px-4 py-3 font-mono text-xs">{ban.ip_hash}</td>
                   <td className="px-4 py-3 text-xs text-[var(--muted)]">{ban.reason || '—'}</td>
                   <td className="px-4 py-3 text-xs text-[var(--muted)]">{formatTimestamp(ban.banned_at)}</td>
@@ -124,7 +124,7 @@ export default function BansPage() {
                   <td className="px-4 py-3">
                     <button
                       onClick={() => handleUnban(ban.ip_hash)}
-                      className="flex items-center gap-1 px-2 py-1 text-xs bg-green-500/10 text-green-400 rounded hover:bg-green-500/20 transition"
+                      className="flex items-center gap-1 min-h-9 px-3 py-1 text-xs bg-success/10 text-success rounded-pill hover:bg-success/20 transition"
                       title="Разблокировать"
                     >
                       <Unlock className="w-3 h-3" /> Разбан
